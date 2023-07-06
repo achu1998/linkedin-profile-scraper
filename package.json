@@ -1,0 +1,15 @@
+{
+  "name": "linkedin-scraper",
+  "version": "1.0.0",
+  "description": "Linkedin Profile Scraper",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "author": "Ashween",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
