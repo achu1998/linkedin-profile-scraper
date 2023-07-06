@@ -10,6 +10,10 @@ app.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });
 
+app.get("/", (req, res) => {
+    res.status(201).json({ message: "Unauthorized access" });
+});
+
 app.get("/linkedin-profile-scraper/:username", async (req, res) => {
     try {
         const { username } = await req.params;
