@@ -3,6 +3,7 @@ const fetch = require('node-fetch');
 const app = express();
 const port = process.env.PORT || 3000;
 let profileData = {};
+const {resolve} = require('path');
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
@@ -11,8 +12,9 @@ app.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });
 
-app.get("/", (req, res) => {
-    res.status(201).json({ message: "Unauthorized access" });
+app.get('/', function(request, response){
+    const absolutePath = resolve('index.html');
+    response.sendFile(absolutePath);
 });
 
 app.get("/linkedin-profile-scraper/:username", async (req, res) => {
