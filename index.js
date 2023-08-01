@@ -1,7 +1,7 @@
 const express = require("express");
 const fetch = require('node-fetch');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 let profileData = {};
 
 // Parse JSON bodies (as sent by API clients)
@@ -17,11 +17,23 @@ app.get('/', function(req, res){
 
 app.get("/linkedin-profile-scraper/:username", async (req, res) => {
     try {
+        profileData = {};
         const { username } = await req.params;
         let profileUrn = await getProfileUrn(username);
         await getMiddleProfile(username,encodeURIComponent(profileUrn?.included?.[0]?.entityUrn));
         await getAboutSection(username,encodeURIComponent(profileUrn?.included?.[0]?.entityUrn));
         await getAllSkill(username,encodeURIComponent(profileUrn?.included?.[0]?.entityUrn));
+        await getContactInfo(username);
+        res.send({status: "success", data:profileData})
+    } catch (f) {
+        res.send(f.message);
+    }
+});
+
+app.get("/LI_PROFILE_DEMO/:username", async (req, res) => {
+    try {
+        profileData = {};
+        const { username } = await req.params;
         await getContactInfo(username);
         res.send({status: "success", data:profileData})
     } catch (f) {
