@@ -29,9 +29,9 @@ app.get("/linkedin-profile-scraper/:username", async (req, res) => {
         await getAllSkill(username,encodeURIComponent(profileUrn?.included?.[0]?.entityUrn));
         await getContactInfo(username);
         if(Object.keys(profileData).length == 0) {
-            res.send({status: "fail"})
+            res.send({status: "fail"});
         } else {
-            res.send({status: "success", data:profileData})
+            res.send({status: "success", data:profileData});
         }
     } catch (f) {
         res.send(f.message);
@@ -44,9 +44,9 @@ app.get("/LI_PROFILE_DEMO/:username", async (req, res) => {
         const { username } = await req.params;
         await getContactInfo(username);
         if(Object.keys(profileData).length == 0) {
-            res.send({status: "fail"})
+            res.send({status: "fail"});
         } else {
-            res.send({status: "success", data:profileData})
+            res.send({status: "success", data:profileData});
         }
     } catch (f) {
         res.send(f.message);
