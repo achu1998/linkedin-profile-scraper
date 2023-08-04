@@ -3,6 +3,10 @@ const fetch = require('node-fetch');
 const app = express();
 const port = process.env.PORT || 3001;
 let profileData = {};
+const cors = require('cors');
+
+// Allow cross platform
+app.use(cors());
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
@@ -24,7 +28,11 @@ app.get("/linkedin-profile-scraper/:username", async (req, res) => {
         await getAboutSection(username,encodeURIComponent(profileUrn?.included?.[0]?.entityUrn));
         await getAllSkill(username,encodeURIComponent(profileUrn?.included?.[0]?.entityUrn));
         await getContactInfo(username);
-        res.send({status: "success", data:profileData})
+        if(Object.keys(profileData).length == 0) {
+            res.send({status: "fail"})
+        } else {
+            res.send({status: "success", data:profileData})
+        }
     } catch (f) {
         res.send(f.message);
     }
@@ -35,7 +43,11 @@ app.get("/LI_PROFILE_DEMO/:username", async (req, res) => {
         profileData = {};
         const { username } = await req.params;
         await getContactInfo(username);
-        res.send({status: "success", data:profileData})
+        if(Object.keys(profileData).length == 0) {
+            res.send({status: "fail"})
+        } else {
+            res.send({status: "success", data:profileData})
+        }
     } catch (f) {
         res.send(f.message);
     }
@@ -358,12 +370,17 @@ function addContactInfo(json, username) {
             username
         );
     });
-    profileData["ContactInfo"] = {
-        lastName: contactComponent?.lastName,
-        firstName: contactComponent?.firstName,
-        birthDateOn: contactComponent?.birthDateOn?.month+"-"+contactComponent?.birthDateOn?.day+" (MM-DD)",
-        publicIdentifier: contactComponent?.publicIdentifier,
-        address: contactComponent?.address,
-        phoneNumbers: contactComponent?.phoneNumbers?.[0]?.phoneNumber?.number,
-    };
+
+    if(typeof contactComponent === "undefined") {
+        profileData = {};
+    } else {
+        profileData["ContactInfo"] = {
+            lastName: contactComponent?.lastName,
+            firstName: contactComponent?.firstName,
+            birthDateOn: contactComponent?.birthDateOn?.month+"-"+contactComponent?.birthDateOn?.day+" (MM-DD)",
+            publicIdentifier: contactComponent?.publicIdentifier,
+            address: contactComponent?.address,
+            phoneNumbers: contactComponent?.phoneNumbers?.[0]?.phoneNumber?.number,
+        };
+    }
 }
